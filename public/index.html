@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tres en Raya — Node + Tailwind</title>
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            neon: "0 0 10px rgba(56,189,248,.8), 0 0 30px rgba(168,85,247,.5)"
+          },
+          animation: {
+            'bg-pan': 'bg-pan 12s linear infinite',
+            'pop': 'pop .2s ease-out',
+            'pulse-glow': 'pulse-glow 1.5s ease-in-out infinite',
+            'pop-big': 'pop-big .25s ease-out'
+          },
+          keyframes: {
+            'bg-pan': {
+              '0%': { backgroundPosition: '0% 50%' },
+              '50%': { backgroundPosition: '100% 50%' },
+              '100%': { backgroundPosition: '0% 50%' }
+            },
+            'pop': { '0%': { transform: 'scale(.95)' }, '100%': { transform: 'scale(1)' } },
+            'pulse-glow': {
+              '0%,100%': { boxShadow: '0 0 8px rgba(34,211,238,.6), 0 0 24px rgba(168,85,247,.4)' },
+              '50%': { boxShadow: '0 0 14px rgba(34,211,238,.9), 0 0 36px rgba(168,85,247,.7)' }
+            },
+            'pop-big': {
+              '0%': { transform: 'scale(.8)', opacity: .0 },
+              '100%': { transform: 'scale(1)', opacity: 1 }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <meta name="color-scheme" content="dark light">
+</head>
+<body class="min-h-screen text-white selection:bg-cyan-300 selection:text-slate-900
+             bg-[linear-gradient(125deg,_#0f172a,_#0a0f1f,_#111827,_#0b1220)]
+             bg-[length:300%_300%] animate-bg-pan">
+
+  <main class="max-w-5xl mx-auto px-4 py-10">
+    <!-- Header -->
+    <header class="flex flex-col items-center gap-4">
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-cyan-300 [text-shadow:_0_0_12px_rgba(34,211,238,.5)]">
+        Tres en Raya
+      </h1>
+      <p class="text-slate-300/90 text-center max-w-xl">
+        Registro de jugadores, marcador, línea ganadora animada y <b>¡celebración con imagen + confeti!</b>
+      </p>
+    </header>
+
+    <!-- REGISTRO -->
+    <section id="playersCard"
+      class="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur border border-white/10 shadow-neon">
+      <div class="flex flex-col md:flex-row gap-6 md:items-end">
+        <div class="flex-1">
+          <h2 class="text-lg font-semibold text-white">Registrar jugadores</h2>
+          <p class="text-sm text-slate-300 mt-1">Escribe los nombres y presiona <span class="text-cyan-300">Comenzar</span>.</p>
+
+          <form id="playersForm" class="mt-5 grid md:grid-cols-2 gap-4">
+            <div>
+              <label for="playerX" class="block text-xs uppercase tracking-wider text-fuchsia-300/90">Jugador X</label>
+              <input id="playerX" type="text" required maxlength="30" placeholder="Ej: Ana"
+                    class="mt-1 w-full rounded-xl bg-slate-900/60 border border-white/10 px-4 py-2 outline-none focus:ring-2 focus:ring-fuchsia-400/60" />
+            </div>
+            <div>
+              <label for="playerO" class="block text-xs uppercase tracking-wider text-cyan-300/90">Jugador O</label>
+              <input id="playerO" type="text" required maxlength="30" placeholder="Ej: Carlos"
+                    class="mt-1 w-full rounded-xl bg-slate-900/60 border border-white/10 px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-300/60" />
+            </div>
+
+            <div class="md:col-span-2 flex flex-wrap items-center gap-3 mt-2">
+              <button type="submit"
+                      class="rounded-xl px-5 py-2.5 bg-cyan-600/90 hover:bg-cyan-500 transition shadow-neon">
+                Comenzar
+              </button>
+              <p id="playersError" class="text-sm text-rose-300 hidden">Ingresa nombres válidos y diferentes.</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Config celebración -->
+        <div class="w-full md:w-[360px] rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+          <h3 class="text-sm font-semibold text-slate-200">Imagen de celebración</h3>
+          <p class="text-xs text-slate-400 mt-1">Sube una imagen (PNG/JPG/GIF). Se mostrará al ganar.</p>
+          <div class="mt-3 flex items-center gap-3">
+            <input id="celebrationFile" type="file" accept="image/*"
+                   class="block w-full text-sm text-slate-300
+                          file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0
+                          file:bg-slate-800/80 file:text-slate-200 hover:file:bg-slate-700/80" />
+          </div>
+          <div class="mt-3">
+            <img id="celebrationPreview" alt="Vista previa" class="hidden w-full h-40 object-cover rounded-lg border border-white/10" />
+            <p id="celebrationHint" class="text-xs text-slate-400 mt-2">No has subido imagen aún.</p>
+            <div class="mt-2 flex gap-2">
+              <button id="btnClearCelebration" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10">Quitar imagen</button>
+              <button id="btnTestCelebration" class="text-xs px-3 py-1.5 rounded-lg bg-emerald-700/80 hover:bg-emerald-600 border border-white/10">Probar celebración</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel superior -->
+    <section class="mt-8 grid md:grid-cols-[1fr_auto_1fr] items-center gap-6">
+      <!-- Marcador -->
+      <div class="rounded-2xl px-4 py-3 md:px-5 md:py-4 bg-white/5 backdrop-blur border border-white/10 shadow-neon">
+        <h2 class="text-sm tracking-widest text-slate-300 uppercase">Marcador</h2>
+        <div class="mt-3 grid grid-cols-3 gap-2 md:gap-3 text-center">
+          <div class="min-w-0">
+            <div class="text-[11px] md:text-xs text-fuchsia-300/80 whitespace-nowrap">
+              X (<span id="nameX" class="inline-block align-baseline max-w-[72px] md:max-w-[96px] overflow-hidden text-ellipsis whitespace-nowrap" title="—">—</span>)
+            </div>
+            <div id="scoreX" class="text-2xl font-bold leading-tight">0</div>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[11px] md:text-xs text-slate-300/80 whitespace-nowrap">Empates</div>
+            <div id="scoreT" class="text-2xl font-bold leading-tight">0</div>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[11px] md:text-xs text-cyan-300/80 whitespace-nowrap">
+              O (<span id="nameO" class="inline-block align-baseline max-w-[72px] md:max-w-[96px] overflow-hidden text-ellipsis whitespace-nowrap" title="—">—</span>)
+            </div>
+            <div id="scoreO" class="text-2xl font-bold leading-tight">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Turno -->
+      <div class="justify-self-center">
+        <div class="rounded-full px-4 py-2 md:px-5 bg-white/10 backdrop-blur border border-white/10">
+          <span class="text-sm text-slate-300">Turno:</span>
+          <span id="turn" class="ml-2 text-lg font-semibold text-white">X</span>
+          <span id="turnName" class="ml-2 text-[12px] md:text-sm text-slate-300 inline-block max-w-[120px] md:max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap" title="(—)">(—)</span>
+        </div>
+      </div>
+
+      <!-- Controles -->
+      <div class="flex md:justify-end gap-3">
+        <button id="btnReset" class="rounded-xl px-4 py-2 bg-fuchsia-600/80 hover:bg-fuchsia-500 transition shadow-neon">Reiniciar</button>
+        <button id="btnClear" class="rounded-xl px-4 py-2 bg-slate-800/80 hover:bg-slate-700 transition border border-white/10">Limpiar marcador</button>
+        <button id="btnChangePlayers" class="rounded-xl px-4 py-2 bg-emerald-700/80 hover:bg-emerald-600 transition border border-white/10">Cambiar jugadores</button>
+      </div>
+    </section>
+
+    <!-- Tablero -->
+    <section class="mt-10 flex justify-center">
+      <div class="relative">
+        <div id="veil"
+             class="absolute inset-0 rounded-3xl bg-slate-900/60 backdrop-blur-sm border border-white/10
+                    flex items-center justify-center text-slate-200 text-sm gap-2 z-10">
+          <span>Registra los jugadores para comenzar</span>
+        </div>
+
+        <div id="board"
+             class="relative grid grid-cols-3 gap-4 p-5 rounded-3xl bg-white/5 backdrop-blur
+                    border border-white/10 shadow-neon pointer-events-none opacity-60">
+
+          <!-- SVG LÍNEA GANADORA (dentro del board) -->
+          <svg id="winSvg"
+               class="pointer-events-none absolute inset-0 w-full h-full z-10 opacity-0 transition-opacity duration-200"
+               xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="rgb(244,114,182)" />
+                <stop offset="100%" stop-color="rgb(34,211,238)" />
+              </linearGradient>
+            </defs>
+            <line id="winLine" x1="0" y1="0" x2="0" y2="0"
+                  stroke="url(#grad)" stroke-width="12" stroke-linecap="round"
+                  vector-effect="non-scaling-stroke" />
+          </svg>
+
+          <!-- 9 celdas -->
+          <button class="cell" data-i="0" aria-label="celda 1"></button>
+          <button class="cell" data-i="1" aria-label="celda 2"></button>
+          <button class="cell" data-i="2" aria-label="celda 3"></button>
+          <button class="cell" data-i="3" aria-label="celda 4"></button>
+          <button class="cell" data-i="4" aria-label="celda 5"></button>
+          <button class="cell" data-i="5" aria-label="celda 6"></button>
+          <button class="cell" data-i="6" aria-label="celda 7"></button>
+          <button class="cell" data-i="7" aria-label="celda 8"></button>
+          <button class="cell" data-i="8" aria-label="celda 9"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <div id="toast"
+         class="fixed left-1/2 -translate-x-1/2 bottom-6 z-50 hidden
+                rounded-2xl px-5 py-3 bg-slate-900/90 border border-white/10 shadow-neon">
+      <span id="toastMsg" class="font-medium"></span>
+    </div>
+
+    <!-- CELEBRACIÓN (overlay) -->
+    <div id="celebration"
+         class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <!-- Canvas confeti -->
+      <canvas id="confettiCanvas" class="absolute inset-0 w-full h-full"></canvas>
+
+      <div class="relative max-w-lg w-full flex flex-col items-center gap-4
+                  rounded-3xl border border-white/10 bg-white/10 p-6 animate-pop-big">
+        <img id="celebrationImg" alt="Celebración" class="max-h-[50vh] w-auto rounded-2xl shadow-neon border border-white/10" />
+        <div class="text-center">
+          <h3 id="celebrationTitle" class="text-xl font-semibold">🎉 ¡Victoria!</h3>
+          <p id="celebrationSubtitle" class="text-slate-300 mt-1 text-sm"></p>
+        </div>
+        <div class="flex gap-3">
+          <button id="btnNextRound"
+                  class="rounded-xl px-4 py-2 bg-cyan-600/90 hover:bg-cyan-500 transition shadow-neon">
+            Siguiente ronda
+          </button>
+          <button id="btnCloseCelebration"
+                  class="rounded-xl px-4 py-2 bg-slate-800/80 hover:bg-slate-700 transition border border-white/10">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center text-xs text-slate-400">
+      Hecho con <span class="text-fuchsia-300">Node</span> + <span class="text-cyan-300">Tailwind</span>.
+    </footer>
+  </main>
+
+  <!-- Estilos de celdas y responsive -->
+  <style>
+    #board { width: min(92vw, 560px); }
+    .cell{
+      width: 160px; height: 160px;
+      display: grid; place-items: center;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 1.25rem;
+      transition: transform .12s ease, background .2s ease, box-shadow .2s ease;
+      backdrop-filter: blur(6px);
+      font-size: 4rem; line-height: 1;
+      user-select: none;
+      position: relative; z-index: 0;
+    }
+    .cell:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .cell.winner{ animation: pulse-glow 1.6s ease-in-out infinite; }
+    @media (max-width: 480px){
+      .cell{ width: 100px; height: 100px; font-size: 2.8rem; }
+    }
+    @media (min-width: 768px) and (max-width: 1100px){
+      #board { width: min(92vw, 520px); }
+      .cell{ width: 150px; height: 150px; font-size: 3.6rem; }
+    }
+  </style>
+
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
