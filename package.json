@@ -4,11 +4,28 @@
   "description": "Tres en raya con Node (Express) y TailwindCSS",
   "main": "server.js",
   "scripts": {
+    "build": "babel src/js --out-dir docs/js && cp -r public/* docs/",
     "start": "node server.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2"
-  }
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "core-js": "^3.45.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OrtegaNidddd/Ringaya.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/OrtegaNidddd/Ringaya/issues"
+  },
+  "homepage": "https://github.com/OrtegaNidddd/Ringaya#readme"
 }
