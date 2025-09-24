@@ -54,60 +54,36 @@
         Tres en Raya
       </h1>
       <p class="text-slate-300/90 text-center max-w-xl">
-        Registro de jugadores, marcador, línea ganadora animada y <b>¡celebración con imagen + confeti!</b>
+        Registro de jugadores, marcador, línea ganadora animada y <b>celebración con imágenes internas + confeti</b>.
       </p>
     </header>
 
     <!-- REGISTRO -->
     <section id="playersCard"
       class="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur border border-white/10 shadow-neon">
-      <div class="flex flex-col md:flex-row gap-6 md:items-end">
-        <div class="flex-1">
-          <h2 class="text-lg font-semibold text-white">Registrar jugadores</h2>
-          <p class="text-sm text-slate-300 mt-1">Escribe los nombres y presiona <span class="text-cyan-300">Comenzar</span>.</p>
+      <h2 class="text-lg font-semibold text-white">Registrar jugadores</h2>
+      <p class="text-sm text-slate-300 mt-1">Escribe los nombres y presiona <span class="text-cyan-300">Comenzar</span>.</p>
 
-          <form id="playersForm" class="mt-5 grid md:grid-cols-2 gap-4">
-            <div>
-              <label for="playerX" class="block text-xs uppercase tracking-wider text-fuchsia-300/90">Jugador X</label>
-              <input id="playerX" type="text" required maxlength="30" placeholder="Ej: Ana"
-                    class="mt-1 w-full rounded-xl bg-slate-900/60 border border-white/10 px-4 py-2 outline-none focus:ring-2 focus:ring-fuchsia-400/60" />
-            </div>
-            <div>
-              <label for="playerO" class="block text-xs uppercase tracking-wider text-cyan-300/90">Jugador O</label>
-              <input id="playerO" type="text" required maxlength="30" placeholder="Ej: Carlos"
-                    class="mt-1 w-full rounded-xl bg-slate-900/60 border border-white/10 px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-300/60" />
-            </div>
-
-            <div class="md:col-span-2 flex flex-wrap items-center gap-3 mt-2">
-              <button type="submit"
-                      class="rounded-xl px-5 py-2.5 bg-cyan-600/90 hover:bg-cyan-500 transition shadow-neon">
-                Comenzar
-              </button>
-              <p id="playersError" class="text-sm text-rose-300 hidden">Ingresa nombres válidos y diferentes.</p>
-            </div>
-          </form>
+      <form id="playersForm" class="mt-5 grid md:grid-cols-2 gap-4">
+        <div>
+          <label for="playerX" class="block text-xs uppercase tracking-wider text-fuchsia-300/90">Jugador X</label>
+          <input id="playerX" type="text" required maxlength="30" placeholder="Ej: Ana"
+                 class="mt-1 w-full rounded-xl bg-slate-900/60 border border-white/10 px-4 py-2 outline-none focus:ring-2 focus:ring-fuchsia-400/60" />
+        </div>
+        <div>
+          <label for="playerO" class="block text-xs uppercase tracking-wider text-cyan-300/90">Jugador O</label>
+          <input id="playerO" type="text" required maxlength="30" placeholder="Ej: Carlos"
+                 class="mt-1 w-full rounded-xl bg-slate-900/60 border border-white/10 px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-300/60" />
         </div>
 
-        <!-- Config celebración -->
-        <div class="w-full md:w-[360px] rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
-          <h3 class="text-sm font-semibold text-slate-200">Imagen de celebración</h3>
-          <p class="text-xs text-slate-400 mt-1">Sube una imagen (PNG/JPG/GIF). Se mostrará al ganar.</p>
-          <div class="mt-3 flex items-center gap-3">
-            <input id="celebrationFile" type="file" accept="image/*"
-                   class="block w-full text-sm text-slate-300
-                          file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0
-                          file:bg-slate-800/80 file:text-slate-200 hover:file:bg-slate-700/80" />
-          </div>
-          <div class="mt-3">
-            <img id="celebrationPreview" alt="Vista previa" class="hidden w-full h-40 object-cover rounded-lg border border-white/10" />
-            <p id="celebrationHint" class="text-xs text-slate-400 mt-2">No has subido imagen aún.</p>
-            <div class="mt-2 flex gap-2">
-              <button id="btnClearCelebration" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10">Quitar imagen</button>
-              <button id="btnTestCelebration" class="text-xs px-3 py-1.5 rounded-lg bg-emerald-700/80 hover:bg-emerald-600 border border-white/10">Probar celebración</button>
-            </div>
-          </div>
+        <div class="md:col-span-2 flex flex-wrap items-center gap-3 mt-2">
+          <button type="submit"
+                  class="rounded-xl px-5 py-2.5 bg-cyan-600/90 hover:bg-cyan-500 transition shadow-neon">
+            Comenzar
+          </button>
+          <p id="playersError" class="text-sm text-rose-300 hidden">Ingresa nombres válidos y diferentes.</p>
         </div>
-      </div>
+      </form>
     </section>
 
     <!-- Panel superior -->
@@ -118,7 +94,9 @@
         <div class="mt-3 grid grid-cols-3 gap-2 md:gap-3 text-center">
           <div class="min-w-0">
             <div class="text-[11px] md:text-xs text-fuchsia-300/80 whitespace-nowrap">
-              X (<span id="nameX" class="inline-block align-baseline max-w-[72px] md:max-w-[96px] overflow-hidden text-ellipsis whitespace-nowrap" title="—">—</span>)
+              X (<span id="nameX"
+                       class="inline-block align-baseline max-w-[72px] md:max-w-[96px] overflow-hidden text-ellipsis whitespace-nowrap"
+                       title="—">—</span>)
             </div>
             <div id="scoreX" class="text-2xl font-bold leading-tight">0</div>
           </div>
@@ -128,7 +106,9 @@
           </div>
           <div class="min-w-0">
             <div class="text-[11px] md:text-xs text-cyan-300/80 whitespace-nowrap">
-              O (<span id="nameO" class="inline-block align-baseline max-w-[72px] md:max-w-[96px] overflow-hidden text-ellipsis whitespace-nowrap" title="—">—</span>)
+              O (<span id="nameO"
+                       class="inline-block align-baseline max-w-[72px] md:max-w-[96px] overflow-hidden text-ellipsis whitespace-nowrap"
+                       title="—">—</span>)
             </div>
             <div id="scoreO" class="text-2xl font-bold leading-tight">0</div>
           </div>
@@ -140,7 +120,9 @@
         <div class="rounded-full px-4 py-2 md:px-5 bg-white/10 backdrop-blur border border-white/10">
           <span class="text-sm text-slate-300">Turno:</span>
           <span id="turn" class="ml-2 text-lg font-semibold text-white">X</span>
-          <span id="turnName" class="ml-2 text-[12px] md:text-sm text-slate-300 inline-block max-w-[120px] md:max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap" title="(—)">(—)</span>
+          <span id="turnName"
+                class="ml-2 text-[12px] md:text-sm text-slate-300 inline-block max-w-[120px] md:max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap"
+                title="(—)">(—)</span>
         </div>
       </div>
 
@@ -155,6 +137,7 @@
     <!-- Tablero -->
     <section class="mt-10 flex justify-center">
       <div class="relative">
+        <!-- Velo -->
         <div id="veil"
              class="absolute inset-0 rounded-3xl bg-slate-900/60 backdrop-blur-sm border border-white/10
                     flex items-center justify-center text-slate-200 text-sm gap-2 z-10">
@@ -165,7 +148,7 @@
              class="relative grid grid-cols-3 gap-4 p-5 rounded-3xl bg-white/5 backdrop-blur
                     border border-white/10 shadow-neon pointer-events-none opacity-60">
 
-          <!-- SVG LÍNEA GANADORA (dentro del board) -->
+          <!-- SVG LÍNEA GANADORA -->
           <svg id="winSvg"
                class="pointer-events-none absolute inset-0 w-full h-full z-10 opacity-0 transition-opacity duration-200"
                xmlns="http://www.w3.org/2000/svg"
@@ -209,13 +192,26 @@
       <!-- Canvas confeti -->
       <canvas id="confettiCanvas" class="absolute inset-0 w-full h-full"></canvas>
 
-      <div class="relative max-w-lg w-full flex flex-col items-center gap-4
+      <div class="relative max-w-4xl w-full flex flex-col items-center gap-6
                   rounded-3xl border border-white/10 bg-white/10 p-6 animate-pop-big">
-        <img id="celebrationImg" alt="Celebración" class="max-h-[50vh] w-auto rounded-2xl shadow-neon border border-white/10" />
-        <div class="text-center">
-          <h3 id="celebrationTitle" class="text-xl font-semibold">🎉 ¡Victoria!</h3>
-          <p id="celebrationSubtitle" class="text-slate-300 mt-1 text-sm"></p>
+        <!-- Fila de imágenes ganador / perdedor -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <div class="flex flex-col items-center gap-2">
+            <img id="imgWin" alt="Victoria" class="max-h-[42vh] w-auto rounded-2xl shadow-neon border border-white/10" />
+            <div class="text-center">
+              <h3 class="text-lg font-semibold text-emerald-300">🎉 ¡Victoria!</h3>
+              <p id="whoWin" class="text-slate-200 text-sm"></p>
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <img id="imgLose" alt="Derrota" class="max-h-[42vh] w-auto rounded-2xl border border-white/10" />
+            <div class="text-center">
+              <h3 class="text-lg font-semibold text-rose-300">💔 Derrota</h3>
+              <p id="whoLose" class="text-slate-200 text-sm"></p>
+            </div>
+          </div>
         </div>
+
         <div class="flex gap-3">
           <button id="btnNextRound"
                   class="rounded-xl px-4 py-2 bg-cyan-600/90 hover:bg-cyan-500 transition shadow-neon">

@@ -18,24 +18,19 @@ const btnReset = document.getElementById('btnReset');
 const btnClear = document.getElementById('btnClear');
 const btnChangePlayers = document.getElementById('btnChangePlayers');
 
-// SVG línea ganadora (dentro del board)
+// SVG línea ganadora
 const winSvg = document.getElementById('winSvg');
 const winLine = document.getElementById('winLine');
 
 // ===== Celebración =====
 const celebration = document.getElementById('celebration');
-const celebrationImg = document.getElementById('celebrationImg');
-const celebrationTitle = document.getElementById('celebrationTitle');
-const celebrationSubtitle = document.getElementById('celebrationSubtitle');
 const confettiCanvas = document.getElementById('confettiCanvas');
+const imgWin = document.getElementById('imgWin');
+const imgLose = document.getElementById('imgLose');
+const whoWin = document.getElementById('whoWin');
+const whoLose = document.getElementById('whoLose');
 const btnNextRound = document.getElementById('btnNextRound');
 const btnCloseCelebration = document.getElementById('btnCloseCelebration');
-
-const celebrationFile = document.getElementById('celebrationFile');
-const celebrationPreview = document.getElementById('celebrationPreview');
-const celebrationHint = document.getElementById('celebrationHint');
-const btnClearCelebration = document.getElementById('btnClearCelebration');
-const btnTestCelebration = document.getElementById('btnTestCelebration');
 
 // ===== Registro =====
 const playersCard = document.getElementById('playersCard');
@@ -58,6 +53,12 @@ const WINS = [
   [0,3,6],[1,4,7],[2,5,8],
   [0,4,8],[2,4,6]
 ];
+
+// Rutas de imágenes internas (en /public/assets/)
+const ASSETS = {
+  WIN:  '/assets/win.png',
+  LOSE: '/assets/lose.png'
+};
 
 // ===== LocalStorage helpers =====
 const lsGet = (k,f)=>{ try{ return JSON.parse(localStorage.getItem(k)) ?? f; }catch{ return f; } };
@@ -218,33 +219,19 @@ function makeConfettiController(canvas){
       p.vy += 0.03;
       p.rot += p.vr;
 
-      if(p.y > H + 40) { // reciclar
-        p.y = -20; p.x = Math.random()*W; p.vy = 2 + Math.random()*2.5;
-      }
+      if(p.y > H + 40) { p.y = -20; p.x = Math.random()*W; p.vy = 2 + Math.random()*2.5; }
     }
   }
   function loop(ts){
     if(!running) return;
     if(!startAt) startAt = ts;
     draw();
-    if(ts - startAt < duration){
-      rafId = requestAnimationFrame(loop);
-    } else {
-      stop(); // detener al terminar la duración
-    }
+    if(ts - startAt < duration){ rafId = requestAnimationFrame(loop); }
+    else { stop(); }
   }
-  function start(){
-    size(); spawn();
-    running = true; startAt = 0;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stop(){
-    running = false;
-    if(rafId) cancelAnimationFrame(rafId);
-    ctx.clearRect(0,0,W,H);
-  }
+  function start(){ size(); spawn(); running = true; startAt = 0; rafId = requestAnimationFrame(loop); }
+  function stop(){ running = false; if(rafId) cancelAnimationFrame(rafId); ctx.clearRect(0,0,W,H); }
   window.addEventListener('resize', () => { if(running){ size(); } });
-
   return { start, stop };
 }
 
@@ -278,7 +265,7 @@ function handleClick(e){
       saveScore('T');
       showToast('🤝 ¡Empate!');
     } else {
-      // Asegurar layout listo (fix vertical) y luego línea + celebración
+      // Línea + celebración con imágenes internas
       requestAnimationFrame(() => {
         setTimeout(() => {
           drawWinningLine(result);
@@ -343,46 +330,20 @@ playersForm.addEventListener('submit', (e) => {
   showToast(`🙌 ¡A jugar, ${players.X} (X) y ${players.O} (O)!`);
 });
 
-// ===== Imagen de celebración =====
-function loadCelebrationImage(){
-  const src = lsGet('tictactoe-celebration-img', null);
-  if(src){
-    celebrationPreview.src = src;
-    celebrationPreview.classList.remove('hidden');
-    celebrationHint.textContent = 'Imagen cargada. Se usará en la celebración.';
-  } else {
-    celebrationPreview.classList.add('hidden');
-    celebrationHint.textContent = 'No has subido imagen aún.';
-  }
-}
-celebrationFile.addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    lsSet('tictactoe-celebration-img', reader.result);
-    loadCelebrationImage();
-    showToast('🖼️ Imagen de celebración guardada');
-  };
-  reader.readAsDataURL(file);
-});
-btnClearCelebration.addEventListener('click', ()=>{
-  localStorage.removeItem('tictactoe-celebration-img');
-  celebrationFile.value = '';
-  loadCelebrationImage();
-});
-btnTestCelebration.addEventListener('click', ()=>{
-  launchCelebration('X', true); // modo prueba
-});
+// ===== Celebración con imágenes internas =====
+function launchCelebration(winner){
+  // Ganador y perdedor
+  const loser = winner === 'X' ? 'O' : 'X';
+  const whoWinName = winner === 'X' ? players.X : players.O;
+  const whoLoseName = loser  === 'X' ? players.X : players.O;
 
-// ===== Celebración: overlay + confeti =====
-function launchCelebration(winner, demo=false){
-  const src = lsGet('tictactoe-celebration-img', null);
-  celebrationImg.src = src || defaultCelebrationPlaceholder();
-  celebrationTitle.textContent = demo ? '🎈 Prueba de Celebración' : '🎉 ¡Victoria!';
-  const who = winner === 'X' ? players.X : players.O;
-  celebrationSubtitle.textContent = demo ? 'Así se verá cuando alguien gane.' : `Ganó ${winner} — ${who}`;
+  // Setear imágenes internas
+  imgWin.src  = ASSETS.WIN;
+  imgLose.src = ASSETS.LOSE;
+  whoWin.textContent  = `${winner} — ${whoWinName}`;
+  whoLose.textContent = `${loser} — ${whoLoseName}`;
 
+  // Mostrar overlay
   celebration.classList.remove('hidden');
   celebration.classList.add('flex');
 
@@ -401,28 +362,7 @@ btnNextRound.addEventListener('click', ()=>{
   resetBoard();
 });
 
-// Placeholder si no hay imagen personalizada
-function defaultCelebrationPlaceholder(){
-  // Un SVG simple como data URL
-  const svg = encodeURIComponent(`
-    <svg xmlns='http://www.w3.org/2000/svg' width='640' height='360'>
-      <defs>
-        <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-          <stop offset='0%' stop-color='#22d3ee'/><stop offset='100%' stop-color='#a855f7'/>
-        </linearGradient>
-      </defs>
-      <rect width='100%' height='100%' fill='url(#g)'/>
-      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
-            font-family='Inter,Segoe UI,Arial' font-size='48' fill='white'>
-        ¡Victoria!
-      </text>
-    </svg>
-  `);
-  return `data:image/svg+xml;charset=utf-8,${svg}`;
-}
-
 // ===== Init =====
 loadScore();
 loadPlayers();
 updateTurnUI();
-loadCelebrationImage();
