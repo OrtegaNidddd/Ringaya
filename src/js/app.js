@@ -56,8 +56,8 @@ const WINS = [
 
 // Rutas de imágenes internas (en /public/assets/)
 const ASSETS = {
-  WIN:  './assets/win.png',
-  LOSE: './assets/lose.png'
+  WIN:  '/assets/win.png',
+  LOSE: '/assets/lose.png'
 };
 
 // ===== LocalStorage helpers =====

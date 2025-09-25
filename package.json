@@ -1,14 +1,17 @@
 {
   "name": "tres-en-raya-node",
-  "version": "1.0.0",
-  "description": "Tres en raya con Node (Express) y TailwindCSS",
-  "main": "server.js",
+  "version": "1.2.0",
+  "description": "Tres en raya (Tailwind) precompilado con Babel para GitHub Pages",
   "scripts": {
-    "start": "node server.js"
+    "build": "del-cli docs && cpy \"public/**\" docs --parents && babel public/app.js --out-file docs/app.js --source-maps inline",
+    "serve:docs": "npx serve docs -p 5173"
   },
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.19.2"
+  "devDependencies": {
+    "@babel/cli": "^7.26.0",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "cpy-cli": "^5.0.0",
+    "del-cli": "^5.1.0",
+    "serve": "^14.2.3"
   }
 }
